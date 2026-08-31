@@ -121,10 +121,3 @@ with open("data/docs/os_scheduling.md", encoding="utf-8") as f:
 sections = chunk_markdown(real_text)
 final_sections = apply_size_limit(sections, max_chunk_size=300)  # small limit on purpose, to force some splitting
 
-# print("\n\n=== FINAL SECTIONS FROM REAL FILE ===\n")
-# for i, sec in enumerate(final_sections):
-#     print(f"--- chunk {i} ---")
-#     print("header_path:", sec["header_path"])
-#     print("length:", len(sec["text"]))
-#     print(repr(sec["text"][:150]))
-#     print()

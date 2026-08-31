@@ -57,14 +57,15 @@ def ask_question(query: str, top_k: int = 3, model: str = "llama3.2", max_retrie
 
 
 # actual use
-user_query = input("Apna sawaal pucho:")
-outcome = ask_question(user_query)
+if __name__ == "__main__":
+    user_query = input("Apna sawaal pucho:")
+    outcome = ask_question(user_query)
 
-if outcome["result"]:
-    print("=== FINAL ANSWER ===")
-    print("Question:", outcome["result"].question)
-    print("Answer:", outcome["result"].answer)
-    print("Confidence:", outcome["result"].confidence)
-    print("Attempts needed:", outcome["attempts"])
-else:
-    print("Sab retries fail ho gayi")
+    if outcome["result"]:
+        print("=== FINAL ANSWER ===")
+        print("Question:", outcome["result"].question)
+        print("Answer:", outcome["result"].answer)
+        print("Confidence:", outcome["result"].confidence)
+        print("Attempts needed:", outcome["attempts"])
+    else:
+        print("Sab retries fail ho gayi")
