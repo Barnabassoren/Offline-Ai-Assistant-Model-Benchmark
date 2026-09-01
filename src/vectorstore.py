@@ -1,6 +1,7 @@
 import chromadb
 from sentence_transformers import SentenceTransformer
 from chunking import chunk_markdown, apply_size_limit
+from pdf_chunking import chunk_pdf
 import os
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -36,17 +37,23 @@ if __name__ == "__main__":
     for filename in files:
         full_path = os.path.join(folder_path, filename)
 
-        with open(full_path, encoding="utf-8") as f:
-            text = f.read()
+        if filename.endswith(".md"):
+            with open(full_path, encoding="utf-8") as f:
+                text = f.read()
+            sections = chunk_markdown(text)
+            file_chunks = apply_size_limit(sections, max_chunk_size=60)
 
-        sections = chunk_markdown(text)
-        file_chunks = apply_size_limit(sections, max_chunk_size=300)
+        elif filename.endswith(".pdf"):
+            file_chunks = chunk_pdf(full_path, max_chunk_size=500)
 
+        else:
+            print(f"unsopported format: {filename}")
+         
         for chunk in file_chunks:
             chunk["source_file"] = filename
             all_chunks.append(chunk)
 
-    print("Total chunks sabhi files se:", len(all_chunks))
+    print("Total chunks from all files:", len(all_chunks))
 
     texts_to_embed = []
     for chunk in all_chunks:
@@ -77,4 +84,5 @@ if __name__ == "__main__":
         documents=documents
     )
 
-    print("Store ho gaya! Total items collection mein:", collection.count())
+    print("Total items collection mein:", collection.count())
+

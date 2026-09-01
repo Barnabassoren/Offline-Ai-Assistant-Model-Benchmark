@@ -9,6 +9,18 @@ def header_level(line: str) -> int:
             break
     return level
 
+def split_by_size_sliding_window(text: str, max_chunk_size: int = 100, overlap: int = 15) -> list[str]:
+    words = text.split(" ")
+    chunks = []
+    start = 0
+    while start < len(words):
+        end = start + max_chunk_size
+        chunk_word = words[start: end]
+        chunks.append(" ".join(chunk_word))
+        start += max_chunk_size - overlap
+
+    return chunks
+
 def split_by_size(text:str, max_chunk_size:int = 20) -> list[str]:
     words = text.split(" ")
     chunks = []
@@ -106,7 +118,9 @@ def apply_size_limit(sections: list[dict], max_chunk_size: int = 800) -> list[di
                         "text": piece["content"]
                     })
                 else:
-                    small_pieces = split_by_size(piece["content"], max_chunk_size)
+                    #small_pieces = split_by_size(piece["content"], max_chunk_size)
+                    small_pieces = split_by_size_sliding_window(piece["content"], max_chunk_size)
+
                     for small_piece in small_pieces:
                         final_sections.append({
                             "header_path":section["header_path"],
